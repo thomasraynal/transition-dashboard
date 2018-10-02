@@ -1,0 +1,23 @@
+#grid{
+    margin-top: 20px;
+}
+#grid tbody.participant:hover {
+    background-color: #EBEBEB;
+}
+#grid .dark  tbody.participant:hover {
+    background-color: #484848;
+}
+#grid tbody.participant:hover tr.main-row td {
+    color: #000;
+}
+#grid .dark  tbody.participant:hover tr.main-row td {
+    color: #CCC;
+}
+#grid tbody.participant:hover tr.text-row td {
+    color: #888;
+}
+#grid  .avatar {
+    width: 96px;
+    height: 128px;
+    overflow: hidden;
+}

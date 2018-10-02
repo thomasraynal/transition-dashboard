@@ -1,0 +1,122 @@
+<div class="container-fluid">
+
+  <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark mb-4 shadow ">
+    <div class="navbar-brand">{{env.appName}} - {{env.appVersion}}</div>
+    <div class="navbar-brand">{{loggedUser.user.dashboard.name}}</div>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarCollapse">
+
+      <ul class="navbar-nav mr-auto">
+
+        <li class="nav-item">
+          <dx-button type="button" class="btn mr-sm-2" (onClick)="onCreateNewParticipantClick($event)" [disabled]="loggedUser.user.identity != 'ADMIN'"
+            icon="fa fa-user" text="{{'PARTICIPANT.NEW' | translate}}" type="default" (onClick)="onCreateNewParticipantClick($event)"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-info" text="{{'MENU.INTERVENTIONS' | translate}}" type="default"
+            (onClick)="redirectTo('/interventions')"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-file" text="{{'MENU.DOCUMENTS' | translate}}" type="default"
+            (onClick)="redirectTo('/documents')"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-user" text="{{'MENU.PARTICIPANTS' | translate}}" type="default"
+            (onClick)="redirectTo('/participants')"></dx-button>
+        </li>
+      </ul>
+
+      <app-search></app-search>
+      <app-user class="navbar-text mr-sm-2"></app-user>
+      <app-disconnect class="nav-item text-nowrap px-1"></app-disconnect>
+    </div>
+  </nav>
+
+  <div class="row">
+    <main role="main" class="col-md-12 ml-sm-12 col-lg-12 px-4">
+      <dx-data-grid #grid id="grid" [dataSource]="dataSource" [hoverStateEnabled]="true" [allowColumnReordering]="false"
+        showBorders="true" (onRowClick)="onParticipantRowClick($event)" rowTemplate="participantRowTemplate">
+
+        <dxo-scrolling mode="virtual"></dxo-scrolling>
+        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+        <dxo-group-panel [visible]="false"></dxo-group-panel>
+        <dxo-selection mode="single"></dxo-selection>
+
+        <dxi-column dataField="avatar" caption="{{'PARTICIPANT.AVATAR' | translate}}" width="auto" dataType="string"></dxi-column>
+        <dxi-column dataField="lastName" caption="{{'PARTICIPANT.LAST_NAME' | translate}}" width="auto" dataType="string"></dxi-column>>
+        <dxi-column dataField="firstName" caption="{{'PARTICIPANT.FIRST_NAME' | translate}}" width="auto" dataType="string"></dxi-column>>
+        <dxi-column dataField="email" caption="{{'PARTICIPANT.MAIL' | translate}}" width="auto" dataType="string"></dxi-column>
+        <dxi-column dataField="phone" caption="{{'PARTICIPANT.PHONE' | translate}}" width="auto" dataType="string"></dxi-column>
+        <dxi-column dataField="position" caption="{{'PARTICIPANT.POSITION' | translate}}" width="auto" dataType="string"></dxi-column>
+        <dxi-column caption=""></dxi-column>
+
+        <tbody style="cursor: pointer" title="{{'PARTICIPANT.EDIT_PARTICIPANT' | translate}}" class="participant dx-row"
+          *dxTemplate="let participant of 'participantRowTemplate'">
+          <tr class="main-row">
+            <td rowspan="2"><img class="avatar" crossorigin="anonymous" [src]="participant.data.avatar" /></td>
+            <td>{{participant.data.lastName}}</td>
+            <td>{{participant.data.firstName}}</td>
+            <td>{{participant.data.email}}</td>
+            <td>{{participant.data.phone}}</td>
+            <td>{{participant.data.position}}</td>
+            <td>
+              <div style="float: right">
+                <dx-button hint="{{'PARTICIPANT.HINT_SHOW_INTERVENTIONS' | translate}}" icon="fa fa-info" style="margin: 5px"
+                  type="default" (onClick)="router.navigate(['/interventions'],{ queryParams: {position: participant.data.position } })"></dx-button>
+                <dx-button hint="{{'PARTICIPANT.HINT_SHOW_DOCUMENTS' | translate}}" icon="fa fa-file" style="margin: 5px"
+                  type="default" (onClick)="router.navigate(['/documents'],{ queryParams: {position: participant.data.position } })"></dx-button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </dx-data-grid>
+
+      <dx-popup class="popup" [width]="500" [height]="600" [title]="selectedParticipant && selectedParticipant.isNew()? translate.instant('PARTICIPANT.NEW'): translate.instant('PARTICIPANT.EDIT')"
+        [closeOnOutsideClick]="false" [dragEnabled]="true" [(visible)]="doShowEditParticipantPopup">
+        <div *dxTemplate="let data of 'content'">
+          <app-avatar [(currentImage)]="selectedParticipant.avatar"></app-avatar>
+
+          <form style="margin-top: 10px" (submit)="onParticipantCreateOrUpdate($event)">
+            <dx-form #form [formData]="selectedParticipant" [showValidationSummary]="false" [colCount]="1"
+              [showValidationSummary]="false" validationGroup="participantData">
+              <dxi-item dataField="email">
+                <dxi-validation-rule type="required" message="{{'VALIDATION.MAIL_REQUIRED' | translate}}">
+                </dxi-validation-rule>
+                <dxi-validation-rule type="email" message="{{'VALIDATION.MAIL_INVALID' | translate}}">
+                </dxi-validation-rule>
+              </dxi-item>
+              <dxi-item dataField="password" [editorOptions]="participantPasswordEditorMode">
+              </dxi-item>
+              <dxi-item dataField="position">
+                <dxi-validation-rule type="required"  message="{{'VALIDATION.POSITION' | translate}}">
+                </dxi-validation-rule>
+              </dxi-item>
+              <dxi-item dataField="firstName">
+                <dxi-validation-rule type="required"  message="{{'VALIDATION.FIRST_NAME' | translate}}">
+                </dxi-validation-rule>
+              </dxi-item>
+              <dxi-item dataField="lastName">
+                <dxi-validation-rule type="required"  message="{{'VALIDATION.LAST_NAME' | translate}}">
+                </dxi-validation-rule>
+              </dxi-item>
+              <!-- refacto -->
+              <dxi-item dataField="phone">
+              </dxi-item>
+            </dx-form>
+
+            <dx-button style="margin-top:10px;" [disabled]="this.loggedUser.user.identity != 'ADMIN'" itemType="button"
+              useSubmitBehavior="true" icon="fa fa-save" type="default" width="475" text="{{'PARTICIPANT.SAVE' | translate}}">
+            </dx-button>
+            <dx-button style="margin-top:5px;" itemType="button" alignment="left" icon="fa fa-remove" type="delete"
+              width="475" text="{{'PARTICIPANT.DELETE' | translate}}" [disabled]="this.loggedUser.user.identity != 'ADMIN' || this.selectedParticipant._id === undefined || this.selectedParticipant.isNew()"
+              (onClick)="onParticipantDelete($event)">
+            </dx-button>
+          </form>
+        </div>
+      </dx-popup>
+    </main>
+  </div>
+</div>

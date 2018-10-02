@@ -1,0 +1,95 @@
+<div id="signin" [ngClass]="{disable: isLoading}">
+  <form class="form-signin">
+    <h1 class="h3 mb-3 font-weight-normal">
+      <app-id></app-id>
+    </h1>
+
+    <div class="dx-fieldset">
+      <div class="dx-field">
+        <div class="dx-field-label">Email address</div>
+        <div class="dx-field-value">
+          <dx-text-box class="default" [(value)]="email" showClearButton="true" placeholder="{{'REGISTER.MAIL' | translate}}" (onInput)="onEmailInput($event)">
+            <dx-validator>
+              <dxi-validation-rule type="email" message="{{'VALIDATION.MAIL_INVALID' | translate}}"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </div>
+      </div>
+
+      <div class="dx-field">
+        <div class="dx-field-label">First Name</div>
+        <div class="dx-field-value">
+          <dx-text-box class="default" [(value)]="firstName" showClearButton="true" placeholder="{{'REGISTER.FIRST_NAME' | translate}}"
+            (onInput)="onFirstNameInput($event)">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="{{'VALIDATION.FIRST_NAME' | translate}}"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </div>
+      </div>
+
+      <div class="dx-field">
+        <div class="dx-field-label">Last Name</div>
+        <div class="dx-field-value">
+          <dx-text-box class="default" [(value)]="lastName" showClearButton="true" placeholder="{{'REGISTER.LAST_NAME' | translate}}"
+            (onInput)="onLastNameInput($event)">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="{{'VALIDATION.LAST_NAME' | translate}}"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </div>
+      </div>
+
+      <div class="dx-field">
+        <div class="dx-field-label">Phone</div>
+        <div class="dx-field-value">
+          <dx-text-box class="default" [(value)]="phone" showClearButton="true" placeholder="{{'REGISTER.PHONE' | translate}}" (onInput)="onPhoneInput($event)">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="{{'VALIDATION.PHONE' | translate}}"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </div>
+      </div>
+
+
+      <div class="dx-field">
+        <div class="dx-field-label">Password</div>
+        <div class="dx-field-value">
+          <dx-text-box class="password" [(value)]="password" mode="password" showClearButton="true" (onInput)="onPasswordInput($event)"
+            placeholder="{{'REGISTER.PASSWORD' | translate}}">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="{{'VALIDATION.PASSWORD' | translate}}"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </div>
+      </div>
+
+      <div class="dx-field">
+        <div class="dx-field-label">Your dashboard name</div>
+        <div class="dx-field-value">
+          <dx-text-box class="default" [(value)]="dashboard" showClearButton="true" placeholder="{{'REGISTER.DASHBOARD' | translate}}"
+            (onInput)="onDashboardInput($event)">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="{{'VALIDATION.DASHBOARD' | translate}}"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-box>
+        </div>
+      </div>
+    </div>
+
+
+    <dx-button class="btn btn-lg btn-primary btn-block" [disabled]=" undefined === this.email || '' === this.email ||
+    undefined === this.firstName || '' === this.firstName ||
+    undefined === this.lastName || '' === this.lastName ||
+    undefined === this.password || '' === this.password ||
+    undefined === this.dashboard || '' === this.dashboard"
+      text="{{'REGISTER.CREATE' | translate}}" (onClick)="this.register()"></dx-button>
+
+
+    <dx-button class="btn btn-lg btn-primary btn-block" text="{{'REGISTER.RETURN' | translate}}" (onClick)="router.navigate(['/login'])"></dx-button>
+    <p class="mt-5 mb-3 text-muted">
+      <app-copyright></app-copyright>
+    </p>
+
+  </form>
+</div>

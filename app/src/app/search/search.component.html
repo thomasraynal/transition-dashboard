@@ -1,0 +1,78 @@
+<div class="container-fluid">
+
+  <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark mb-4 shadow ">
+    <div class="navbar-brand">{{env.appName}} - {{env.appVersion}}</div>
+    <div class="navbar-brand">{{loggedUser.user.dashboard.name}}</div>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarCollapse">
+
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-info" text="Interventions" type="default" (onClick)="redirectTo('/interventions')"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-file" text="Documents" type="default" (onClick)="redirectTo('/documents')"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-user" text="Participants" type="default" (onClick)="redirectTo('/participants')"></dx-button>
+        </li>
+      </ul>
+
+      <app-search></app-search>
+      <app-user class="navbar-text mr-sm-2"></app-user>
+      <app-disconnect class="nav-item text-nowrap px-1"></app-disconnect>
+    </div>
+  </nav>
+
+
+  <div class="container-fluid" [ngClass]="{disable: isLoading}">
+    <div class="row">
+      <main role="main" class="col-md-12 ml-sm-12 col-lg-12 px-4">
+
+        <dx-data-grid #grid id="grid" [dataSource]="searchResults" [hoverStateEnabled]="true" [allowColumnReordering]="false"
+          [showBorders]="true" (onRowClick)="onResultRowClick($event)" rowTemplate="resultRowTemplate">
+
+          <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+          <dxo-group-panel [visible]="false"></dxo-group-panel>
+          <dxo-selection mode="single"></dxo-selection>
+
+          <dxi-column dataField="avatar" width="auto" dataType="string"></dxi-column>
+          <dxi-column dataField="Description" width="auto" dataType="string"></dxi-column>
+
+          <tbody style="cursor: pointer" class="result dx-row" *dxTemplate="let result of 'resultRowTemplate'">
+            <tr class="main-row">
+              <td rowspan="2"><img class="avatar" crossorigin="anonymous" [src]="result.data.avatar" /></td>
+              <td>{{result.data.label()}} - {{result.data.content()}} </td>
+          </tbody>
+        </dx-data-grid>
+
+        <!-- <div class="mb20">
+          <h1>Search Results</h1>
+          <div [ngSwitch]="searchTerm != undefined">
+            <div *ngSwitchCase="true">
+              <h2 class="lead"><strong class="text-danger">{{searchResults.length}}</strong> results were found for the search
+                for <strong class="text-danger">{{searchTerm}}</strong></h2>
+            </div>
+            <div *ngSwitchDefault>
+              <h2 class="lead">No search term provided</h2>
+            </div>
+          </div>
+        </div>
+        <section *ngFor="let result of searchResults" class="col-xs-12 col-sm-6 col-md-12">
+          <article class="search-result row">
+            <div class="col-xs-6 col-sm-6 col-md-2">
+              <a href="#" title="Lorem ipsum" class="thumbnail"><img src="{{result.avatar}}" crossorigin="anonymous" alt="Lorem ipsum" /></a>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-10 excerpet">
+              <h3><a href="#" title="">{{result.label()}}</a></h3>
+              <p>{{result.content()}}</p>
+            </div>
+          </article>
+        </section> -->
+      </main>
+    </div>
+  </div>
+</div>

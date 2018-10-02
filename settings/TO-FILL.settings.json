@@ -1,0 +1,26 @@
+{
+    "port": 3000,
+    "scheme": "http",
+    "host": "localhost",
+    "secret": "thisISit",
+    "upload": {
+        "aws": {
+            "accessKeyId": "",
+            "secretAccessKey": "",
+            "bucket": "",
+            "acl" : ""
+        },
+        "local": {
+            "directory": "uploads"
+        }
+    },
+    "storage": {
+        "mongo": {
+            "db": ""
+        }
+    },
+    "plugins": {
+        "storage": "mongo",
+        "upload": "s3"
+    }
+}

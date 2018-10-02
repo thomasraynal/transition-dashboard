@@ -1,0 +1,122 @@
+<div class="container-fluid">
+
+  <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark mb-4 shadow ">
+    <div class="navbar-brand">{{env.appName}} - {{env.appVersion}}</div>
+    <div class="navbar-brand">{{loggedUser.user.dashboard.name}}</div>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarCollapse">
+
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <dx-select-box class="nav-inline  mr-sm-2" #menu [value]="selectedPosition" [items]="availablePositions"
+            displayExpr="name" (onItemClick)="selectPosition($event)"></dx-select-box>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-user" text="{{'INTERVENTION.NEW' | translate}}" type="default"
+            (onClick)="onCreateNewInterventionClick($event)"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-info" text="{{'MENU.INTERVENTIONS' | translate}}" type="default"
+            (onClick)="redirectTo('/interventions')"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-file" text="{{'MENU.DOCUMENTS' | translate}}" type="default"
+            (onClick)="redirectTo('/documents')"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-user" text="{{'MENU.PARTICIPANTS' | translate}}" type="default"
+            (onClick)="redirectTo('/participants')"></dx-button>
+        </li>
+      </ul>
+
+      <app-search></app-search>
+      <app-user class="navbar-text mr-sm-2"></app-user>
+      <app-disconnect class="nav-item text-nowrap px-1"></app-disconnect>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <main role="main" class="col-md-12 ml-sm-12 col-lg-12 px-4">
+
+        <dx-data-grid id="grid" [dataSource]="dataSource" [hoverStateEnabled]="true" [allowColumnReordering]="false"
+          [showBorders]="true" (onRowClick)="onInterventionRowClick($event)" rowTemplate="interventionRowTemplate">
+
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+          <dxo-group-panel [visible]="false"></dxo-group-panel>
+
+          <dxi-column width="100" dataField="date" caption="{{'INTERVENTION.DATE' | translate}}"></dxi-column>
+          <dxi-column width="200" dataField="position" caption="{{'INTERVENTION.POSITION' | translate}}"></dxi-column>
+          <dxi-column caption="{{'INTERVENTION.INTERVENTIONS' | translate}}"></dxi-column>
+
+          <tbody style="cursor: pointer" class="intervention dx-row" *dxTemplate="let intervention of 'interventionRowTemplate'">
+            <tr class="main-row">
+              <td>{{intervention.data.date | date: "dd/MM/yyyy"}}</td>
+              <td>{{intervention.data.owner.position}}</td>
+              <td rowspan="2" style="width: 100px;">
+                <img class="avatar" crossorigin="anonymous" [src]="intervention.data.owner.avatar" />
+              </td>
+              <td>
+                <div [ngSwitch]="intervention.data.content.length <= 100">
+                  <div *ngSwitchCase="true">
+                    {{intervention.data.content}}
+                    <dx-button style="float: right" hint="{{'INTERVENTION.HINT_PARTICIPANT' | translate}}" icon="fa fa-user"
+                      type="default" (onClick)="router.navigate(['/participants'],{ queryParams: {id: intervention.data.owner._id  } })"></dx-button>
+
+                  </div>
+                  <div *ngSwitchDefault>
+                    {{intervention.data.content.slice(0, 100) + ' [...]'}}
+                    <dx-button style="float: right" hint="{{'INTERVENTION.HINT_PARTICIPANT' | translate}}" icon="fa fa-user"
+                      type="default" (onClick)="router.navigate(['/participants'],{ queryParams: {id: intervention.data.owner._id } })"></dx-button>
+                  </div>
+                </div>
+              </td>
+          </tbody>
+        </dx-data-grid>
+
+        <dx-popup id="popup" class="popup" [width]="window.innerWidth / 2" [height]="window.innerHeight / 1.2" [title]="selectedIntervention && selectedIntervention.isNew()? translate.instant('INTERVENTION.NEW'): translate.instant('INTERVENTION.EDIT')"
+          closeOnOutsideClick="false" dragEnabled="true" [(visible)]="doShowEditInterventionPopup">
+          <div *dxTemplate="let data of 'content'">
+            <form (submit)="onInterventionCreateOrUpdate($event)">
+
+              <div style="display: inline;">
+                <div>
+                  <dx-date-box style="margin:10px;" [value]="selectedIntervention.date">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="{{'VALIDATION.DATE' | translate}}"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-date-box>
+                  <div style="margin:10px">{{selectedIntervention.owner.username()}}</div>
+                  <div style="margin:10px">{{selectedIntervention.owner.position}}</div>
+                </div>
+                <img style="margin:10px;" class="avatar" crossorigin="anonymous" [src]="selectedIntervention.owner.avatar">
+              </div>
+
+              <dx-text-area autoResizeEnabled="false" [(value)]="selectedIntervention.content" height="200">
+                <dx-validator>
+                  <dxi-validation-rule type="required" message="{{'VALIDATION.CONTENT' | translate}}"></dxi-validation-rule>
+                </dx-validator>
+              </dx-text-area>
+
+              <dx-button style="margin-top:10px;" [disabled]="this.selectedIntervention._id !== undefined && this.loggedUser.user._id != this.selectedIntervention.owner._id"
+                itemType="button" useSubmitBehavior="true" icon="fa fa-save" type="default" [width]="(window.innerWidth / 2) - 15"
+                text="{{'INTERVENTION.SAVE' | translate}}">
+              </dx-button>
+
+              <dx-button style="margin-top:5px;" itemType="button" alignment="left" icon="fa fa-remove" type="delete"
+                [width]="(window.innerWidth / 2) - 15" text="{{'INTERVENTION.DELETE' | translate}}" [disabled]="this.selectedIntervention._id === undefined || (this.loggedUser.user._id != this.selectedIntervention.owner._id) || this.selectedIntervention.isNew()"
+                (onClick)="onInterventionDelete($event)">
+              </dx-button>
+
+            </form>
+          </div>
+        </dx-popup>
+
+      </main>
+    </div>
+  </div>
+</div>

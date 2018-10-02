@@ -1,0 +1,10 @@
+<div class="avatar-upload">
+  <div class="avatar-upload__shell">
+    <div [className]="uploadWrapperUiState">
+      <div [ngStyle]="{'width': uploadWidth}" class="avatar-upload__image-wrapper">
+        <img [src]="currentImage" crossorigin="anonymous"></div>
+      <img [src]="currentImage" crossorigin="anonymous" class="avatar-upload__faded-image">
+      <input name="avatar" title="{{'AVATAR.SELECT' | translate}}" (change)="upload($event)" type="file" accept="image/x-png,image/gif,image/jpeg">
+    </div>
+  </div>
+</div>

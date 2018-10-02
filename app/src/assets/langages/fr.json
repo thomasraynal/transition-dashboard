@@ -1,0 +1,54 @@
+{
+    "AVATAR": {
+        "SELECT": "Cliquer pour sélectionner un nouvel avatar"
+    },
+    "COMMON": {
+        "SEARCH": "Recherchez..."
+    },
+    "VALIDATION": {
+        "EMAIL": "Une date doit être saisie",
+        "TYPE": "Un type doit être saisi",
+        "NAME": "Un nom doit être saisi",
+        "POSITION": "Une position doit être saisie",
+        "CONTENT": "Un contenu doit être saisie"
+    },
+    "MENU": {
+        "INTERVENTIONS": "Interventions",
+        "DOCUMENTS": "Documents",
+        "PARTICIPANTS": "Participants"
+    },
+    "DOCUMENT": {
+        "NEW": "Nouveau document",
+        "EDIT": "Editez le document",
+        "SELECT": "Selectionnez le type...",
+        "TYPE": "Type",
+        "POSITION": "Position",
+        "DATE": "Date",
+        "NAME": "Nom",
+        "URL": "Url",
+        "EITHER_ENTER_URL": "Saisissez une url...",
+        "OR_UPLOAD": " ... Ou uploader un document",
+        "HINT_PARTICIPANT": "Voir le profil",
+        "SAVE": "Sauvegarder",
+        "DELETE": "Supprimer",
+        "SELECT_FILE": "Choisir un document à uploader",
+        "CLEAR_FILE": "Supprimer le fichier uploadé"
+    },
+    "INTERVENTION": {
+        "NEW": "Nouvelle intervention",
+        "EDIT": "Editez l'intervention",
+        "INTERVENTIONS": "Interventions",
+        "POSITION": "Position",
+        "DATE": "Date",
+        "HINT_PARTICIPANT": "Voir le profil",
+        "SAVE": "Sauvegarder",
+        "DELETE": "Supprimer"
+    },
+    "LOGIN": {
+        "MAIL": "Saisissez votre email...",
+        "PASSWORD": "Saisissez votre mot de passe...",
+        "DASHBOARD": "Saisissez le nom de votre dashboard...",
+        "REGISTER": "...ou créer un compte et un nouveau dashboard",
+        "FAILURE": "Le login a échoué"
+    }
+}

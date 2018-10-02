@@ -1,0 +1,27 @@
+<div id="signin" [ngClass]="{disable: isLoading}">
+  <form class="form-signin">
+    <h1 class="h3 mb-3 font-weight-normal">
+      <app-id></app-id>
+    </h1>
+    <label class="sr-only">Email address</label>
+    <dx-text-box class="email" [(value)]="email" showClearButton="true" placeholder="{{'LOGIN.MAIL' | translate}}" (onInput)="onEmailInput($event)">
+      <dx-validator>
+        <dxi-validation-rule type="email" message="{{'VALIDATION.MAIL_INVALID' | translate}}"></dxi-validation-rule>
+      </dx-validator>
+    </dx-text-box>
+    <label class="sr-only">Dashboard</label>
+    <dx-text-box class="dashboard" [(value)]="dashboard" (onInput)="onDashboardInput($event)" showClearButton="true" placeholder="{{'LOGIN.DASHBOARD' | translate}}"></dx-text-box>
+    <label class="sr-only">Password</label>
+    <dx-text-box class="password" [(value)]="password" mode="password" showClearButton="true" placeholder="{{'LOGIN.PASSWORD' | translate}}"
+      (onInput)="onPasswordInput($event)"></dx-text-box>
+    <dx-button 
+      class="btn btn-lg btn-primary btn-block" 
+      [disabled]="this.isLoginDisabled()" text="Login" 
+      (onInitialized)="onLoginInitialized($event)"
+      (onClick)="this.login()"></dx-button>
+    <dx-button class="btn btn-lg btn-primary btn-block" text="{{'LOGIN.REGISTER' | translate}}" (onClick)="router.navigate(['/register'])"></dx-button>
+    <p class="mt-5 mb-3 text-muted">
+      <app-copyright></app-copyright>
+    </p>
+  </form>
+</div>

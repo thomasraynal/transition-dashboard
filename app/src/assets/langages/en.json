@@ -1,0 +1,85 @@
+{
+    "AVATAR": {
+        "SELECT": "Click to select a new avatar"
+    },
+    "COMMON": {
+        "SEARCH": "Search..."
+    },
+    "VALIDATION": {
+        "MAIL_INVALID": "Email is invalid",
+        "MAIL_REQUIRED": "Email is required",
+        "TYPE": "Type is required",
+        "NAME": "Name is required",
+        "FIRST_NAME": "First name is required",
+        "LAST_NAME": "First name is required",
+        "DASHBOARD": "Dashboard name is required",
+        "PHONE": "A phone is required",
+        "PASSWORD": "Password is required",
+        "POSITION": "Position is required",
+        "CONTENT": "A content is required"
+    },
+    "MENU": {
+        "INTERVENTIONS": "Interventions",
+        "DOCUMENTS": "Documents",
+        "PARTICIPANTS": "Participants"
+    },
+    "DOCUMENT": {
+        "NEW": "New document",
+        "EDIT": "Edit document",
+        "SELECT": "Select document type...",
+        "TYPE": "Type",
+        "POSITION": "Position",
+        "DATE": "Date",
+        "NAME": "Name",
+        "URL": "Url",
+        "EITHER_ENTER_URL": "Either enter the document url...",
+        "OR_UPLOAD": " ... Or upload a document",
+        "HINT_PARTICIPANT": "Show participant profile",
+        "SAVE": "Save",
+        "DELETE": "Delete",
+        "SELECT_FILE": "Choose a document to upload",
+        "CLEAR_FILE": "Clear uploaded file"
+    },
+    "INTERVENTION": {
+        "NEW": "New intervention",
+        "EDIT": "Edit intervention",
+        "INTERVENTIONS": "Interventions",
+        "POSITION": "Position",
+        "DATE": "Date",
+        "HINT_PARTICIPANT": "Show participant profile",
+        "SAVE": "Save",
+        "DELETE": "Delete"
+    },
+    "LOGIN": {
+        "MAIL": "Enter email...",
+        "PASSWORD": "Enter password...",
+        "DASHBOARD": "Enter dashboard name...",
+        "REGISTER": "...or Register to create a new dashboard",
+        "FAILURE": "Failed to login for email"
+    },
+    "PARTICIPANT": {
+        "NEW": "New participant",
+        "EDIT": "Edit participant",
+        "AVATAR": "Avatar",
+        "LAST_NAME": "Last Name",
+        "FIRST_NAME": "First Name",
+        "MAIL": "Mail",
+        "PHONE": "Phone",
+        "POSITION": "Position",
+        "EDIT_PARTICIPANT": "Double-click to edit participant",
+        "HINT_SHOW_INTERVENTIONS": "Show participant interventions",
+        "HINT_SHOW_DOCUMENTS": "Show participant documents",
+        "SAVE": "Save",
+        "DELETE": "Delete"
+    },
+    "REGISTER": {
+        "MAIL": "Enter email...",
+        "LAST_NAME": "Enter last name...",
+        "FIRST_NAME": "Enter first name...",
+        "PHONE": "Enter phone...",
+        "PASSWORD": "Enter password...",
+        "DASHBOARD": "Enter dashboard name...",
+        "CREATE": "Create Dashboard",
+        "RETURN": "Return to login"
+    }
+}

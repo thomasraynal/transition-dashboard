@@ -1,0 +1,150 @@
+<div class="container-fluid">
+
+  <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark mb-4 shadow ">
+    <div class="navbar-brand">{{env.appName}} - {{env.appVersion}}</div>
+    <div class="navbar-brand">{{loggedUser.user.dashboard.name}}</div>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarCollapse">
+
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <dx-select-box class="nav-inline  mr-sm-2" #menu [value]="selectedPosition" [items]="availablePositions"
+            displayExpr="name" (onItemClick)="selectPosition($event)"></dx-select-box>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-file" text="{{'DOCUMENT.NEW' | translate}}" type="default"
+            (onClick)="onCreateNewDocumentClick($event)"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-info" text="{{'MENU.INTERVENTIONS' | translate}}" type="default"
+            (onClick)="redirectTo('/interventions')"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-file" text="{{'MENU.DOCUMENTS' | translate}}" type="default"
+            (onClick)="redirectTo('/documents')"></dx-button>
+        </li>
+        <li class="nav-item">
+          <dx-button class="btn mr-sm-2" icon="fa fa-user" text="{{'MENU.PARTICIPANTS' | translate}}" type="default"
+            (onClick)="redirectTo('/participants')"></dx-button>
+        </li>
+      </ul>
+
+      <app-search></app-search>
+      <app-user class="navbar-text mr-sm-2"></app-user>
+      <app-disconnect class="nav-item text-nowrap px-1"></app-disconnect>
+    </div>
+  </nav>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <main role="main" class="col-md-12 ml-sm-12 col-lg-12 px-4">
+
+        <dx-data-grid id="grid" [dataSource]="dataSource" [allowColumnReordering]="false" [rowAlternationEnabled]="true"
+          [showBorders]="true" (onRowClick)="onDocumentRowClick($event)" rowTemplate="documentRowTemplate">
+
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+          <dxo-group-panel [visible]="false"></dxo-group-panel>
+
+          <dxi-column width="150"></dxi-column>
+          <dxi-column width="200" caption="{{'DOCUMENT.TYPE' | translate}}"></dxi-column>
+          <dxi-column width="200" caption="{{'DOCUMENT.POSITION' | translate}}"></dxi-column>
+          <dxi-column width="150" caption="{{'DOCUMENT.DATE' | translate}}"></dxi-column>
+          <dxi-column width="200" caption="{{'DOCUMENT.NAME' | translate}}"></dxi-column>
+          <dxi-column width="auto" caption="{{'DOCUMENT.URL' | translate}}"></dxi-column>
+          <dxi-column caption=""></dxi-column>
+
+          <tbody style="cursor: pointer" class="document dx-row" *dxTemplate="let document of 'documentRowTemplate'">
+            <tr class="main-row">
+              <td rowspan="2" style="width: 100px;"><img class="avatar" crossorigin="anonymous" [src]="document.data.owner.avatar" /></td>
+              <td>{{document.data.type}}</td>
+              <td>{{document.data.position}}</td>
+              <td>{{document.data.date | date: "dd/MM/yyyy"}}</td>
+              <td>{{document.data.name}}</td>
+              <td>{{document.data.url}}</td>
+              <td>
+                <dx-button hint="{{'DOCUMENT.HINT_PARTICIPANT' | translate}}" icon="fa fa-user" type="default"
+                  (onClick)="router.navigate(['/participants'],{ queryParams: {position: document.data.position } })"></dx-button>
+              </td>
+          </tbody>
+        </dx-data-grid>
+
+        <dx-popup [ngClass]="{disable: isUploading}" class="popup" [width]="500" [height]="675" [title]="selectedDocument && selectedDocument.isNew()? translate.instant('DOCUMENT.NEW'): translate.instant('DOCUMENT.EDIT')"
+          closeOnOutsideClick="false" dragEnabled="true" [(visible)]="doShowEditDocumentPopup">
+          <div *dxTemplate="let data of 'content'">
+
+            <form style="margin-top: 10px" (submit)="onDocumentCreateOrUpdate($event)">
+              <dx-form #form [formData]="selectedDocument" [showValidationSummary]="false" [colCount]="1"
+                [showValidationSummary]="false" validationGroup="documentData">
+
+                <dxi-item dataField="date" editorType="dxDateBox" [editorOptions]="{ value: this.selectedDocument.date }">
+                  <dxi-validation-rule type="required" message="{{'VALIDATION.DATE' | translate}}">
+                  </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="name">
+                  <dxi-validation-rule type="required" message="{{'VALIDATION.NAME' | translate}}">
+                  </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="type" editorType="dxSelectBox" [editorOptions]="{ items: selectedDocument.getDocumentTypes(),placeholder:'Select document type...' }">
+                  <dxi-validation-rule type="required" message="{{'VALIDATION.TYPE' | translate}}">
+                  </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item [disabled]="this.loggedUser.user.identity != 'ADMIN'" dataField="position" editorType="dxSelectBox"
+                  [editorOptions]="{ items: availableDocumentPositions, displayExpr:'name', valueExpr:'name' }">
+                  <dxi-validation-rule type="required" message="{{'VALIDATION.POSITION' | translate}}">
+                  </dxi-validation-rule>
+                </dxi-item>
+
+              </dx-form>
+
+              <div style="margin-top: 15px;" class="dx-field">
+                <div style="width: 100% !important;font-weight: bold;" class="dx-field-label">{{'DOCUMENT.EITHER_ENTER_URL'
+                  | translate}}</div>
+              </div>
+
+              <div class="dx-field">
+                <div style="width:10%;" class="dx-field-label">Url:</div>
+                <div style="width:85%;" class="dx-field-value">
+                  <dx-text-box [disabled]="selectedFile !== undefined" [showClearButton]="true" [(value)]="selectedDocument.url">
+                  </dx-text-box>
+                </div>
+              </div>
+
+              <div style="margin-top: 10px;" class="dx-field">
+                <div style="width: 100% !important;font-weight: bold;" class="dx-field-label">{{'DOCUMENT.OR_UPLOAD' |
+                  translate}}</div>
+              </div>
+
+              <dx-file-uploader [disabled]="selectedDocument.url !== undefined && selectedDocument.url != ''"
+                (onValueChanged)="onUploadFileSelected($event)" style="width:100%;margin-left: -10px;" name="document"
+                [uploadUrl]="this.documentService.uploadUrl" [uploadHeaders]="this.documentService.authorizationHeader()"
+                (onUploadStarted)="onUploadStarted($event)" (onUploadError)="onUploadError($event)" (onUploaded)="onUploaded($event)"
+                selectButtonText="{{'DOCUMENT.SELECT_FILE' | translate}}" allowCanceling="true" accept="*" uploadMode="instantly">
+              </dx-file-uploader>
+
+              <dx-button [disabled]="selectedFile === undefined" (onClick)="onUploadFileCleared($event)" style="margin-top:-10px;width:100%;"
+                itemType="normal" icon="fa fa-eraser" type="" text="{{'DOCUMENT.CLEAR_FILE' | translate}}" ></dx-button>
+
+              <dx-button style="margin-top:10px;" [disabled]="!this.isSelectedDocumentValid()" itemType="button"
+                useSubmitBehavior="true" icon="fa fa-save" type="default" width="475" text="{{'DOCUMENT.SAVE' | translate}}">
+              </dx-button>
+
+              <dx-button style="margin-top:5px;" itemType="button" alignment="left" icon="fa fa-remove" type="delete"
+                width="475" text="{{'DOCUMENT.DELETE' | translate}}" [disabled]="this.selectedDocument._id === undefined || this.selectedDocument.isNew()"
+                (onClick)="onDocumentDelete($event)">
+              </dx-button>
+
+            </form>
+          </div>
+        </dx-popup>
+      </main>
+    </div>
+  </div>
+</div>
